@@ -1,16 +1,13 @@
-#include "helloWindow.h"
-#include <matplot/matplot.h>
-
-void test02() {
-    std::vector<std::vector<int>> data = {
-        {45, 60, 32}, {43, 54, 76}, {32, 94, 68}, {23, 95, 58}};
-    matplot::heatmap(data);
-
-    matplot::show();
-}
+﻿#include "helloWindow.h"
+#include "mandelbrotSet.h"
 
 int main(int argc, char const *argv[]) {
-    // test01(); // Hello Window
-    test02(); // Matplot++
+    test02(); // Mandelbrot Set Single Thread
+    test03(); // Mandelbrot Set OpenMP1
+    test04(); // Mandelbrot Set OpenMP2
+    test05(); // Mandelbrot Set CUDA
+
+    test01(); // Hello Window
+
     return 0;
 }

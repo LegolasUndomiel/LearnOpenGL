@@ -1,5 +1,5 @@
-#ifndef __HELLOWINDOW_H__
-#define __HELLOWINDOW_H__
+#ifndef __HELLO_WINDOW_H__
+#define __HELLO_WINDOW_H__
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 

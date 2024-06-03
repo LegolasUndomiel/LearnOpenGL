@@ -2,7 +2,7 @@
 add_rules("mode.debug", "mode.release")
 
 -- 设置编码格式
-set_encodings("utf-8")
+-- set_encodings("utf-8")
 
 -- 设置编译标准
 set_languages("c++17")
@@ -25,11 +25,33 @@ target("LearnOpenGL")
     set_suffixname("-$(plat)-$(arch)-$(mode)")
 
     add_includedirs("include")
-    add_includedirs("C:/Program Files/Matplot++ 1.2.0/include")
+    add_includedirs("$(env MATPLOT_PATH)/include")
+    add_includedirs("$(env CONDA_PATH)/include")
+    add_includedirs("$(env NUMPY_CORE)/include")
+    add_includedirs("$(env CUDA_PATH)/include")
 
     add_files("src/*.c")
     add_files("src/*.cc")
+    add_files("src/*.cu")
 
-    add_links("OpenGL32", "glfw3", "user32", "gdi32", "shell32", "matplot", "nodesoup")
-    add_linkdirs("lib", "$(env MATPLOT_PATH)/lib", "$(env MATPLOT_PATH)/lib/Matplot++")
+    -- OpenMP
+    add_cxflags("/openmp")
+    add_ldflags("/openmp")
+    add_cuflags("-Xcompiler /openmp")
+    add_culdflags("-Xcompiler /openmp")
+
+    -- CUDA
+    add_cugencodes("native")
+
+    -- 系统(Visual Studio)默认
+    add_links("OpenGL32", "user32", "gdi32", "shell32")
+    -- 项目自带第三方库
+    add_links("glfw3")
+    add_linkdirs("lib")
+    -- Matplot++
+    add_links("matplot", "nodesoup")
+    add_linkdirs("$(env MATPLOT_PATH)/lib", "$(env MATPLOT_PATH)/lib/Matplot++")
+    -- Anaconda
+    add_links("python3", "python311", "_tkinter")
+    add_linkdirs("$(env CONDA_PATH)/libs")
 target_end()
