@@ -25,13 +25,29 @@ target("LearnOpenGL")
     set_suffixname("-$(plat)-$(arch)-$(mode)")
 
     add_includedirs("include")
+
+    add_files("src/*.c")
+    add_files("src/*.cc")
+
+    -- 系统(Visual Studio)默认
+    add_links("OpenGL32", "user32", "gdi32", "shell32")
+    -- 项目自带第三方库
+    add_links("glfw3")
+    add_linkdirs("lib")
+target_end()
+
+target("cuExample")
+    set_kind("binary")
+    set_runtimes("MD")
+    set_targetdir("bin/$(mode)")
+    set_suffixname("-$(plat)-$(arch)-$(mode)")
+
+    add_includedirs("include")
     add_includedirs("$(env MATPLOT_PATH)/include")
     add_includedirs("$(env CONDA_PATH)/include")
     add_includedirs("$(env NUMPY_CORE)/include")
     add_includedirs("$(env CUDA_PATH)/include")
 
-    add_files("src/*.c")
-    add_files("src/*.cc")
     add_files("src/*.cu")
 
     -- OpenMP
@@ -43,11 +59,6 @@ target("LearnOpenGL")
     -- CUDA
     add_cugencodes("native")
 
-    -- 系统(Visual Studio)默认
-    add_links("OpenGL32", "user32", "gdi32", "shell32")
-    -- 项目自带第三方库
-    add_links("glfw3")
-    add_linkdirs("lib")
     -- Matplot++
     add_links("matplot", "nodesoup")
     add_linkdirs("$(env MATPLOT_PATH)/lib", "$(env MATPLOT_PATH)/lib/Matplot++")

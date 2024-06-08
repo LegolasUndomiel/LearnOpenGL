@@ -34,6 +34,7 @@ void test01() {
     glfwMakeContextCurrent(window);
     // 注册回调函数, 当窗口大小改变的时候改变视口(viewport)
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+    glfwSetJoystickCallback(joystick_callback);
 
     // glad: load all OpenGL function pointers
     // ---------------------------------------
@@ -45,6 +46,13 @@ void test01() {
 
     // render loop
     // -----------
+
+    int present = glfwJoystickPresent(GLFW_JOYSTICK_1);
+    if (present && glfwJoystickIsGamepad(GLFW_JOYSTICK_1)) {
+        const char *name = glfwGetJoystickName(GLFW_JOYSTICK_1);
+        printf("%s Connected\n", name);
+    }
+
     while (!glfwWindowShouldClose(window)) { // 判断是否需要关闭窗口
         // input
         // -----
@@ -95,4 +103,13 @@ void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
     // 改变窗口的大小的时候，视口也应该调整, 通过对窗口注册一个回调函数(Callback
     // Function)，它会在每次窗口大小被调整的时候被调用
     glViewport(0, 0, width, height); // viewport 视口 (左下坐标，宽度)
+}
+
+void joystick_callback(int jid, int event) {
+    if (event == GLFW_CONNECTED) {
+        const char *name = glfwGetJoystickName(jid);
+        printf("%s Connected\n", name);
+    } else if (event == GLFW_DISCONNECTED) {
+        printf("Gamepad Disconnected\n");
+    }
 }

@@ -1,8 +1,8 @@
 #ifndef __MANDELBROT_SET_H__
 #define __MANDELBROT_SET_H__
 
-#define WIDTH (1920 * 10)
-#define HEIGHT (1080 * 10)
+#define WIDTH (1920 * 1)
+#define HEIGHT (1080 * 1)
 #define MAX_ITERATIONS 8000
 #include <cuda_runtime.h>
 
