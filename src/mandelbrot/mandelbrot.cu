@@ -1,4 +1,4 @@
-#include "mandelbrotSet.h"
+#include "mandelbrot/mandelbrotSet.h"
 
 int main(int argc, char const *argv[]) {
     test02(); // Mandelbrot Set Single Thread

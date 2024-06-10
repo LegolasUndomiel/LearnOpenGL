@@ -1,4 +1,4 @@
-﻿#include "helloWindow.h"
+﻿#include "LearnOpenGL/helloWindow.h"
 #include <iostream>
 #include <stdlib.h>
 
@@ -44,14 +44,26 @@ void test01() {
         exit(EXIT_FAILURE);
     }
 
-    // render loop
-    // -----------
-
+    // gamepad detect
     int present = glfwJoystickPresent(GLFW_JOYSTICK_1);
     if (present && glfwJoystickIsGamepad(GLFW_JOYSTICK_1)) {
         const char *name = glfwGetJoystickName(GLFW_JOYSTICK_1);
         printf("%s Connected\n", name);
+
+        int axesCount;
+        const float *axes = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &axesCount);
+        printf("Number of axes: %d\n", axesCount);
+        // for (int i = 0; i < axesCount; i++)
+        // printf("Axis %d: %f\n", i, axes[i]);
+
+        int buttonCount;
+        const unsigned char *buttons =
+            glfwGetJoystickButtons(GLFW_JOYSTICK_1, &buttonCount);
+        printf("Number of buttons: %d\n", buttonCount);
     }
+
+    // render loop
+    // -----------
 
     while (!glfwWindowShouldClose(window)) { // 判断是否需要关闭窗口
         // input
@@ -88,9 +100,49 @@ void test01() {
 // frame and react accordingly
 // ---------------------------------------------------------------------------------------------------------
 void processInput(GLFWwindow *window) {
-    // 当回车键按下时关闭窗口
-    if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS)
+    // process keyboard
+    // when enter is pressed, close the window
+    if (GLFW_PRESS == glfwGetKey(window, GLFW_KEY_ENTER))
         glfwSetWindowShouldClose(window, true);
+
+    // process gamepad
+    int present = glfwJoystickPresent(GLFW_JOYSTICK_1);
+    if (present && glfwJoystickIsGamepad(GLFW_JOYSTICK_1)) {
+        int buttonCount;
+        const unsigned char *buttons =
+            glfwGetJoystickButtons(GLFW_JOYSTICK_1, &buttonCount);
+        if (GLFW_PRESS == buttons[GLFW_GAMEPAD_BUTTON_A])
+            printf("Button A pressed\n");
+        if (GLFW_PRESS == buttons[GLFW_GAMEPAD_BUTTON_B])
+            printf("Button B pressed\n");
+        if (GLFW_PRESS == buttons[GLFW_GAMEPAD_BUTTON_X])
+            printf("Button X pressed\n");
+        if (GLFW_PRESS == buttons[GLFW_GAMEPAD_BUTTON_Y])
+            printf("Button Y pressed\n");
+        if (GLFW_PRESS == buttons[GLFW_GAMEPAD_BUTTON_LEFT_BUMPER])
+            printf("Button left bumper pressed\n");
+        if (GLFW_PRESS == buttons[GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER])
+            printf("Button right bumper pressed\n");
+        // when back is pressed, close the window
+        if (GLFW_PRESS == buttons[GLFW_GAMEPAD_BUTTON_BACK]) {
+            printf("Button back pressed\n");
+            glfwSetWindowShouldClose(window, true);
+        }
+        if (GLFW_PRESS == buttons[GLFW_GAMEPAD_BUTTON_START])
+            printf("Button start pressed\n");
+        if (GLFW_PRESS == buttons[GLFW_GAMEPAD_BUTTON_LEFT_THUMB])
+            printf("Button left thumb pressed\n");
+        if (GLFW_PRESS == buttons[GLFW_GAMEPAD_BUTTON_RIGHT_THUMB])
+            printf("Button right thumb pressed\n");
+        if (GLFW_PRESS == buttons[GLFW_GAMEPAD_BUTTON_DPAD_UP])
+            printf("Button dpad up pressed\n");
+        if (GLFW_PRESS == buttons[GLFW_GAMEPAD_BUTTON_DPAD_RIGHT])
+            printf("Button dpad right pressed\n");
+        if (GLFW_PRESS == buttons[GLFW_GAMEPAD_BUTTON_DPAD_DOWN])
+            printf("Button dpad down pressed\n");
+        if (GLFW_PRESS == buttons[GLFW_GAMEPAD_BUTTON_DPAD_LEFT])
+            printf("Button dpad left pressed\n");
+    }
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback
@@ -109,6 +161,14 @@ void joystick_callback(int jid, int event) {
     if (event == GLFW_CONNECTED) {
         const char *name = glfwGetJoystickName(jid);
         printf("%s Connected\n", name);
+        int axesCount;
+        const float *axes = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &axesCount);
+        printf("Number of axes: %d\n", axesCount);
+
+        int buttonCount;
+        const unsigned char *buttons =
+            glfwGetJoystickButtons(GLFW_JOYSTICK_1, &buttonCount);
+        printf("Number of buttons: %d\n", buttonCount);
     } else if (event == GLFW_DISCONNECTED) {
         printf("Gamepad Disconnected\n");
     }

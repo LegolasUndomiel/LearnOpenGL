@@ -1,5 +1,5 @@
-﻿#include "mandelbrotSet.h"
-#include "matplotlibcpp.h"
+﻿#include "mandelbrot/mandelbrotSet.h"
+#include "matplotcpp/matplotlibcpp.h"
 #include <chrono>
 #include <omp.h>
 #include <vector>

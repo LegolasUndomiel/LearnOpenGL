@@ -26,8 +26,8 @@ target("LearnOpenGL")
 
     add_includedirs("include")
 
-    add_files("src/*.c")
-    add_files("src/*.cc")
+    add_files("src/glad/*.c")
+    add_files("src/LearnOpenGL/*.cc")
 
     -- 系统(Visual Studio)默认
     add_links("OpenGL32", "user32", "gdi32", "shell32")
@@ -48,7 +48,7 @@ target("cuExample")
     add_includedirs("$(env NUMPY_CORE)/include")
     add_includedirs("$(env CUDA_PATH)/include")
 
-    add_files("src/*.cu")
+    add_files("src/mandelbrot/*.cu")
 
     -- OpenMP
     add_cxflags("/openmp")
