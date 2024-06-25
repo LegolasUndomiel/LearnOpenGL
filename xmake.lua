@@ -5,10 +5,17 @@ add_rules("mode.debug", "mode.release")
 -- set_encodings("utf-8")
 
 -- 设置编译标准
-set_languages("c++17")
+set_languages("c17", "cxx17")
+
+set_kind("binary")
+set_runtimes("MD")
+set_targetdir("bin/$(mode)")
+set_suffixname("-$(plat)-$(arch)-$(mode)")
 
 -- 自动更新Visual Studio解决方案
 add_rules("plugin.vsxmake.autoupdate")
+
+add_includedirs("include")
 
 -- 设置自定义清理脚本
 on_clean(function (target)
@@ -19,12 +26,6 @@ on_clean(function (target)
 end)
 
 target("LearnOpenGL")
-    set_kind("binary")
-    set_runtimes("MD")
-    set_targetdir("bin/$(mode)")
-    set_suffixname("-$(plat)-$(arch)-$(mode)")
-
-    add_includedirs("include")
     add_includedirs("dependencies/GLAD/include")
     add_includedirs("dependencies/GLFW/include")
 
@@ -38,15 +39,8 @@ target("LearnOpenGL")
     add_linkdirs("dependencies/GLFW/lib")
 target_end()
 
-target("cuExample")
-    set_kind("binary")
-    set_runtimes("MD")
-    set_targetdir("bin/$(mode)")
-    set_suffixname("-$(plat)-$(arch)-$(mode)")
-
-    add_includedirs("include")
-    add_includedirs("dependencies/matplot++")
-    add_includedirs("$(env MATPLOT_PATH)/include")
+target("Mandelbrot")
+    add_includedirs("dependencies/matplotlib-cpp")
     add_includedirs("$(env CONDA_PATH)/include")
     add_includedirs("$(env NUMPY_CORE)/include")
     add_includedirs("$(env CUDA_PATH)/include")
@@ -62,10 +56,7 @@ target("cuExample")
     -- CUDA
     add_cugencodes("native")
 
-    -- Matplot++
-    add_links("matplot", "nodesoup")
-    add_linkdirs("$(env MATPLOT_PATH)/lib", "$(env MATPLOT_PATH)/lib/Matplot++")
     -- Anaconda
-    add_links("python3", "python311", "_tkinter")
+    add_links("python3")
     add_linkdirs("$(env CONDA_PATH)/libs")
 target_end()
