@@ -3,8 +3,8 @@
 #include <stdlib.h>
 
 // settings
-const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
+const unsigned int SCR_WIDTH = 1920;
+const unsigned int SCR_HEIGHT = 1080;
 
 void test01() {
     // glfw: initialize and configure
@@ -24,8 +24,8 @@ void test01() {
 
     // glfw window creation
     // --------------------
-    GLFWwindow *window =
-        glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
+    GLFWwindow *window = glfwCreateWindow(
+        SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL-CreateWindow", NULL, NULL);
     if (window == NULL) {
         std::cout << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
@@ -34,6 +34,7 @@ void test01() {
     glfwMakeContextCurrent(window);
     // 注册回调函数, 当窗口大小改变的时候改变视口(viewport)
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+    // 注册手柄事件回调函数， 当手柄被连接或者断开的时候被调用
     glfwSetJoystickCallback(joystick_callback);
 
     // glad: load all OpenGL function pointers
@@ -64,7 +65,6 @@ void test01() {
 
     // render loop
     // -----------
-
     while (!glfwWindowShouldClose(window)) { // 判断是否需要关闭窗口
         // input
         // -----
@@ -78,7 +78,7 @@ void test01() {
         // 缓冲位：GL_COLOR_BUFFER_BIT GL_DEPTH_BUFFER_BIT GL_STENCIL_BUFFER_BIT
         // RGBA通道
         // glClearColor(0.2f, 0.1f, 0.3f, 0.1f);
-        glClearColor(100.0f / 255, 149.0f / 255, 237.0f / 255, 1.0f);
+        glClearColor(100.0f / 255, 149.0f / 255, 237.0f / 255, 0.8f);
         glClear(GL_COLOR_BUFFER_BIT);
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse
@@ -93,6 +93,7 @@ void test01() {
     // glfw: terminate, clearing all previously allocated GLFW resources.
     // ------------------------------------------------------------------
     glfwTerminate();
+    system("pause");
     exit(EXIT_SUCCESS);
 }
 
@@ -158,6 +159,7 @@ void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
 }
 
 void joystick_callback(int jid, int event) {
+    // 手柄连接和断开的回调函数
     if (event == GLFW_CONNECTED) {
         const char *name = glfwGetJoystickName(jid);
         printf("%s Connected\n", name);
@@ -169,7 +171,6 @@ void joystick_callback(int jid, int event) {
         const unsigned char *buttons =
             glfwGetJoystickButtons(GLFW_JOYSTICK_1, &buttonCount);
         printf("Number of buttons: %d\n", buttonCount);
-    } else if (event == GLFW_DISCONNECTED) {
+    } else if (event == GLFW_DISCONNECTED)
         printf("Gamepad Disconnected\n");
-    }
 }

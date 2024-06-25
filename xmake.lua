@@ -25,15 +25,17 @@ target("LearnOpenGL")
     set_suffixname("-$(plat)-$(arch)-$(mode)")
 
     add_includedirs("include")
+    add_includedirs("dependencies/GLAD/include")
+    add_includedirs("dependencies/GLFW/include")
 
-    add_files("src/glad/*.c")
+    add_files("dependencies/GLAD/src/*.c")
     add_files("src/LearnOpenGL/*.cc")
 
     -- 系统(Visual Studio)默认
     add_links("OpenGL32", "user32", "gdi32", "shell32")
     -- 项目自带第三方库
     add_links("glfw3")
-    add_linkdirs("lib")
+    add_linkdirs("dependencies/GLFW/lib")
 target_end()
 
 target("cuExample")
@@ -43,6 +45,7 @@ target("cuExample")
     set_suffixname("-$(plat)-$(arch)-$(mode)")
 
     add_includedirs("include")
+    add_includedirs("dependencies/matplot++")
     add_includedirs("$(env MATPLOT_PATH)/include")
     add_includedirs("$(env CONDA_PATH)/include")
     add_includedirs("$(env NUMPY_CORE)/include")
