@@ -60,3 +60,36 @@ target("Mandelbrot")
     add_links("python3")
     add_linkdirs("$(env CONDA_PATH)/libs")
 target_end()
+
+target("Imgui")
+    add_includedirs("dependencies/GLFW/include")
+    add_includedirs("dependencies/imgui")
+    add_includedirs("dependencies/imgui/backends")
+
+    add_files("src/imgui/*.cpp")
+    add_files("dependencies/imgui/*.cpp")
+    add_files("dependencies/imgui/backends/*.cpp")
+
+    -- 系统(Visual Studio)默认
+    add_links("OpenGL32", "user32", "gdi32", "shell32")
+    -- 项目自带第三方库
+    add_links("glfw3")
+    add_linkdirs("dependencies/GLFW/lib")
+target_end()
+
+target("ImguiWasm")
+    set_plat("wasm")
+
+    add_includedirs("dependencies/GLFW/include")
+    add_includedirs("dependencies/imgui")
+    add_includedirs("dependencies/imgui/backends")
+    add_includedirs("dependencies/emscripten")
+
+    add_files("src/imgui/*.cpp")
+    add_files("dependencies/imgui/*.cpp")
+    add_files("dependencies/imgui/backends/*.cpp")
+
+    -- 项目自带第三方库
+    add_links("glfw3")
+    add_linkdirs("dependencies/GLFW/lib")
+target_end()

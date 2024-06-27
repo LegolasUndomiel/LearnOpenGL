@@ -174,3 +174,41 @@ void joystick_callback(int jid, int event) {
     } else if (event == GLFW_DISCONNECTED)
         printf("Gamepad Disconnected\n");
 }
+
+void test02() {
+    GLFWwindow *window;
+
+    // 初始化 GLFW
+    if (!glfwInit()) {
+        printf("Failed to initialize GLFW\n");
+        exit(EXIT_FAILURE);
+    }
+
+    // 创建窗口
+    window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
+    if (!window) {
+        printf("Failed to create GLFW window\n");
+        glfwTerminate();
+        exit(EXIT_FAILURE);
+    }
+
+    // 创建上下文
+    glfwMakeContextCurrent(window);
+
+    while (!glfwWindowShouldClose(window)) {
+        // 渲染指令
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        // 交换缓冲
+        glfwSwapBuffers(window);
+
+        // 处理事件
+        glfwPollEvents();
+    }
+
+    // 释放资源
+    printf("Bye!\n");
+    glfwTerminate();
+    system("pause");
+    exit(EXIT_SUCCESS);
+}
