@@ -2,8 +2,7 @@
 
 int main(int argc, char const *argv[]) {
 
-    // test01(); // Hello Window
-    test02();
+    test01(); // Hello Window
 
     return 0;
 }

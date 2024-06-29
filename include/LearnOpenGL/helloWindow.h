@@ -7,5 +7,4 @@ void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void joystick_callback(int jid, int event);
 void processInput(GLFWwindow *window);
 void test01();
-void test02();
 #endif
