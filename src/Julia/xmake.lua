@@ -8,10 +8,6 @@ target("Julia_CUDA")
 
     add_defines("USE_CUDA")
 
-    -- OpenMP
-    add_cuflags("-Xcompiler /openmp")
-    add_culdflags("-Xcompiler /openmp")
-
     -- CUDA
     add_cugencodes("native")
 
@@ -27,11 +23,9 @@ target("Julia_OpenMP")
 
     add_files("*.cu")
 
-    set_toolchains("msvc")
-
     -- OpenMP
-    add_cxxflags("/openmp")
-    add_ldflags("/openmp")
+    add_cuflags("-Xcompiler /openmp")
+    add_culdflags("-Xcompiler /openmp")
 
     -- Anaconda
     add_links("python3")
