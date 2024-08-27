@@ -3,10 +3,12 @@
 #include <chrono>
 #include <iostream>
 #include <omp.h>
+#include <string>
 #include <vector>
 
 using std::cout;
 using std::endl;
+using std::string;
 using std::vector;
 
 using namespace std::chrono;
@@ -65,7 +67,7 @@ Mandelbrot::~Mandelbrot() {
 #endif
 }
 
-void Mandelbrot::PixelCalculate() {
+void Mandelbrot::pixelCalculation() {
 #ifdef USE_CUDA
     dim3 blockDim(32, 32);
     dim3 gridDim((this->width_ + blockDim.x - 1) / blockDim.x,
@@ -119,7 +121,7 @@ void Mandelbrot::copyBack() {
 #endif
 }
 
-void Mandelbrot::Save() {
+void Mandelbrot::save() {
     vector<float> data(this->width_ * this->height_, 0.0f);
     for (int i = 0; i < this->width_ * this->height_; i++)
         data[i] = (float)this->data_[i];
@@ -135,10 +137,14 @@ void Mandelbrot::Save() {
 #endif
 }
 
-int main(int argc, char const *argv[]) {
+void test01() {
     Mandelbrot m(1920, 1080, 8000);
-    m.PixelCalculate();
+    m.pixelCalculation();
     m.copyBack();
-    m.Save();
+    m.save();
+}
+
+int main(int argc, char const *argv[]) {
+    test01();
     return 0;
 }

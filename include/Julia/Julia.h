@@ -28,9 +28,9 @@ class Mandelbrot {
   public:
     Mandelbrot(unsigned short int, unsigned short int, unsigned short int);
     ~Mandelbrot();
-    void PixelCalculate();
+    void pixelCalculation();
     void copyBack();
-    void Save();
+    void save();
 };
 
 #endif
