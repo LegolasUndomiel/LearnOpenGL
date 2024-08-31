@@ -62,8 +62,10 @@ Mandelbrot::Mandelbrot(unsigned short int width, unsigned short int height,
 
 Mandelbrot::~Mandelbrot() {
     delete[] this->data_;
+    cout << "释放CPU内存" << endl;
 #ifdef USE_CUDA
     cudaFree(this->d_data_);
+    cout << "释放GPU内存" << endl;
 #endif
 }
 
