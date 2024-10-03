@@ -1,5 +1,4 @@
-// #include <glad/glad.h>
-#include <GL/glew.h>
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include <stdlib.h>
@@ -61,10 +60,11 @@ int main(int argc, char const *argv[]) {
     std::cout << "GLFW version: " << glfwGetVersionString() << std::endl;
 
     // Set OpenGL version
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+    // 这里不知道为什么用 glfwWindowHint 之后不能绘制三角形
+    // glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    // glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
     // Core-profile mode
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    // glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     // glfw window creation
     GLFWwindow *window = glfwCreateWindow(1600, 900, "Triangle", NULL, NULL);
@@ -77,16 +77,11 @@ int main(int argc, char const *argv[]) {
     // Make the window's context current
     glfwMakeContextCurrent(window);
 
-#if 0
     // glad: load all OpenGL function pointers
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         std::cout << "Failed to initialize GLAD" << std::endl;
         exit(EXIT_FAILURE);
     }
-#else
-    if (glewInit() != GLEW_OK)
-        std::cout << "Error!" << std::endl;
-#endif
 
     // print version information
     // 必须在glad初始化之后才能调用
