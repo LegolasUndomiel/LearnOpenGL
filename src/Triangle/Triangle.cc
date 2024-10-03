@@ -3,6 +3,25 @@
 #include <iostream>
 #include <stdlib.h>
 
+// OpenGL Shading Language (GLSL)
+std::string vertexShader = "#version 460 core\n"
+                           "\n"
+                           "layout(location = 0) in vec4 position;\n"
+                           "\n"
+                           "void main()\n"
+                           "{\n"
+                           "    gl_Position = position;\n"
+                           "}\n";
+
+std::string fragmentShader = "#version 460 core\n"
+                             "\n"
+                             "layout(location = 0) out vec4 FragColor;\n"
+                             "\n"
+                             "void main()\n"
+                             "{\n"
+                             "    FragColor = vec4(1.0f, 0.5f, 0.2f, 0.8f);\n"
+                             "}\n";
+
 static unsigned int CompileShader(unsigned int type,
                                   const std::string &source) {
     unsigned int id = glCreateShader(type);
@@ -60,14 +79,14 @@ int main(int argc, char const *argv[]) {
     std::cout << "GLFW version: " << glfwGetVersionString() << std::endl;
 
     // Set OpenGL version
-    // 这里不知道为什么用 glfwWindowHint 之后不能绘制三角形
-    // glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    // glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+    // OpenGL 核心模式(Core) 要求 我们使用 VAO，绑定正确的 VAO 才能正确绘制
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
     // Core-profile mode
-    // glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     // glfw window creation
-    GLFWwindow *window = glfwCreateWindow(1600, 900, "Triangle", NULL, NULL);
+    GLFWwindow *window = glfwCreateWindow(800, 600, "Triangle", NULL, NULL);
     if (window == NULL) {
         std::cout << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
@@ -89,9 +108,14 @@ int main(int argc, char const *argv[]) {
 
     float positions[6] = {-0.5f, -0.5f, 0.0f, 0.5f, 0.5f, -0.5f};
 
+    unsigned int buffer, VAO;
+    // create vertex array object
+    glGenVertexArrays(1, &VAO);
     // create a buffer
-    unsigned int buffer;
     glGenBuffers(1, &buffer);
+
+    // binding(selecting) vertex array object
+    glBindVertexArray(VAO);
 
     // binding(selecting) the buffer
     glBindBuffer(GL_ARRAY_BUFFER, buffer);
@@ -101,26 +125,19 @@ int main(int argc, char const *argv[]) {
     // enable
     glEnableVertexAttribArray(0);
     // layout
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2,
+                          (void *)0);
 
-    std::string vertexShader = "#version 460 core\n"
-                               "\n"
-                               "layout(location = 0) in vec4 position;\n"
-                               "\n"
-                               "void main()\n"
-                               "{\n"
-                               "    gl_Position = position;\n"
-                               "}\n";
+    // note that this is allowed, the call to glVertexAttribPointer registered
+    // VBO as the vertex attribute's bound vertex buffer object so afterwards we
+    // can safely unbind
+    // glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-    std::string fragmentShader =
-        "#version 460 core\n"
-        "\n"
-        "layout(location = 0) out vec4 FragColor;\n"
-        "\n"
-        "void main()\n"
-        "{\n"
-        "    FragColor = vec4(0.5f, 0.0f, 0.0f, 1.0f);\n"
-        "}\n";
+    // You can unbind the VAO afterwards so other VAO calls won't accidentally
+    // modify this VAO, but this rarely happens. Modifying other VAOs requires a
+    // call to glBindVertexArray anyways so we generally don't unbind VAOs (nor
+    // VBOs) when it's not directly necessary.
+    glBindVertexArray(0);
 
     unsigned int shader = CreateShader(vertexShader, fragmentShader);
     glUseProgram(shader);
@@ -131,6 +148,10 @@ int main(int argc, char const *argv[]) {
         glClearColor(100.0f / 255, 149.0f / 255, 237.0f / 255, 0.8f);
         glClear(GL_COLOR_BUFFER_BIT);
 
+        glBindVertexArray(VAO); // seeing as we only have a single VAO there's
+                                // no need to bind it every time, but we'll do
+                                // so to keep things a bit more organized
+
         // draw
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
@@ -140,6 +161,13 @@ int main(int argc, char const *argv[]) {
         // poll events
         glfwPollEvents();
     }
+
+    // clean up
+    // optional: de-allocate all resources once they've outlived their purpose:
+    // ------------------------------------------------------------------------
+    glDeleteVertexArrays(1, &VAO);
+    glDeleteBuffers(1, &buffer);
+    glDeleteProgram(shader);
     glfwTerminate();
 
     return 0;
