@@ -1,26 +1,36 @@
+#include <fstream>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
+#include <sstream>
 #include <stdlib.h>
+#include <string>
 
-// OpenGL Shading Language (GLSL)
-std::string vertexShader = "#version 460 core\n"
-                           "\n"
-                           "layout(location = 0) in vec4 position;\n"
-                           "\n"
-                           "void main()\n"
-                           "{\n"
-                           "    gl_Position = position;\n"
-                           "}\n";
+struct ShaderProgramSources {
+    std::string VertexSource;
+    std::string FragmentSource;
+};
 
-std::string fragmentShader = "#version 460 core\n"
-                             "\n"
-                             "layout(location = 0) out vec4 FragColor;\n"
-                             "\n"
-                             "void main()\n"
-                             "{\n"
-                             "    FragColor = vec4(1.0f, 0.5f, 0.2f, 0.8f);\n"
-                             "}\n";
+static ShaderProgramSources ParseShader(const std::string &filePath) {
+    std::ifstream stream(filePath);
+    enum class ShaderType { NONE = -1, VERTEX = 0, FRAGMENT = 1 };
+
+    std::string line;
+    std::stringstream ss[2];
+    ShaderType type = ShaderType::NONE;
+    while (getline(stream, line)) {
+        if (line.find("#shader") != std::string::npos) {
+            if (line.find("vertex") != std::string::npos)
+                type = ShaderType::VERTEX;
+            else if (line.find("fragment") != std::string::npos)
+                type = ShaderType::FRAGMENT;
+        } else {
+            ss[(int)type] << line << '\n';
+        }
+    }
+
+    return {ss[0].str(), ss[1].str()};
+}
 
 static unsigned int CompileShader(unsigned int type,
                                   const std::string &source) {
@@ -156,7 +166,16 @@ int main(int argc, char const *argv[]) {
     // VBOs) when it's not directly necessary.
     glBindVertexArray(0);
 
-    unsigned int shader = CreateShader(vertexShader, fragmentShader);
+    // load shader
+    // 相对路径，相对于当前exe文件所在路径
+    // 发布的游戏项目文件夹中，exe文件和Resource文件夹在同一目录
+    ShaderProgramSources source =
+        ParseShader("../../src/Rectangle/Resources/Shaders/Basic.shader");
+    std::cout << source.VertexSource << std::endl;
+    std::cout << source.FragmentSource << std::endl;
+
+    unsigned int shader =
+        CreateShader(source.VertexSource, source.FragmentSource);
     glUseProgram(shader);
 
     // 用线框绘制，默认使用填充方式绘制
