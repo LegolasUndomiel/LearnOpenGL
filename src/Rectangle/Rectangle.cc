@@ -116,49 +116,46 @@ int main(int argc, char const *argv[]) {
     // 必须在glad初始化之后才能调用
     std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
 
+    unsigned int VAO;
+    // create vertex array object
+    glGenVertexArrays(1, &VAO);
+    // binding(selecting) vertex array object
+    glBindVertexArray(VAO);
+
+    // create a buffer
+    unsigned int VBO;
     float positions[12] = {
         0.5f,  0.5f,  0.0f, // top right
         0.5f,  -0.5f, 0.0f, // bottom right
         -0.5f, -0.5f, 0.0f, // bottom left
         -0.5f, 0.5f,  0.0f  // top left
     };
-
-    unsigned int indices[6] = {
-        0, 1, 3, // first Triangle
-        1, 2, 3  // second Triangle
-    };
-
-    unsigned int buffer, VAO, EBO;
-    // create vertex array object
-    glGenVertexArrays(1, &VAO);
-    // create a buffer
-    glGenBuffers(1, &buffer);
-    // create an element buffer
-    glGenBuffers(1, &EBO);
-
-    // binding(selecting) vertex array object
-    glBindVertexArray(VAO);
-
+    glGenBuffers(1, &VBO);
     // binding(selecting) the buffer
-    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, 12 * sizeof(float), positions,
                  GL_STATIC_DRAW);
-
-    // binding(selecting) the element buffer
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), indices,
-                 GL_STATIC_DRAW);
-
     // enable
     glEnableVertexAttribArray(0);
     // layout
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3,
                           (void *)0);
-
     // note that this is allowed, the call to glVertexAttribPointer registered
     // VBO as the vertex attribute's bound vertex buffer object so afterwards we
     // can safely unbind
     // glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    // create an element buffer
+    unsigned int EBO;
+    unsigned int indices[6] = {
+        0, 1, 3, // first Triangle
+        1, 2, 3  // second Triangle
+    };
+    glGenBuffers(1, &EBO);
+    // binding(selecting) the element buffer
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), indices,
+                 GL_STATIC_DRAW);
 
     // You can unbind the VAO afterwards so other VAO calls won't accidentally
     // modify this VAO, but this rarely happens. Modifying other VAOs requires a
@@ -170,14 +167,12 @@ int main(int argc, char const *argv[]) {
     // 相对路径，相对于当前exe文件所在路径
     // 发布的游戏项目文件夹中，exe文件和Resource文件夹在同一目录
     ShaderProgramSources source =
-        ParseShader("../../src/Rectangle/Resources/Shaders/Basic.shader");
+        ParseShader("../../src/Rectangle/Resources/Shaders/Basic.glsl");
     std::cout << source.VertexSource << std::endl;
     std::cout << source.FragmentSource << std::endl;
-
     unsigned int shader =
         CreateShader(source.VertexSource, source.FragmentSource);
     glUseProgram(shader);
-
     // 用线框绘制，默认使用填充方式绘制
     // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
@@ -187,9 +182,9 @@ int main(int argc, char const *argv[]) {
         glClearColor(100.0f / 255, 149.0f / 255, 237.0f / 255, 0.8f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glBindVertexArray(VAO); // seeing as we only have a single VAO there's
-                                // no need to bind it every time, but we'll do
-                                // so to keep things a bit more organized
+        // seeing as we only have a single VAO there's no need to bind it every
+        // time, but we'll do so to keep things a bit more organized
+        glBindVertexArray(VAO);
 
         // draw
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
@@ -205,7 +200,7 @@ int main(int argc, char const *argv[]) {
     // optional: de-allocate all resources once they've outlived their purpose:
     // ------------------------------------------------------------------------
     glDeleteVertexArrays(1, &VAO);
-    glDeleteBuffers(1, &buffer);
+    glDeleteBuffers(1, &VBO);
     glDeleteBuffers(1, &EBO);
     glDeleteProgram(shader);
     glfwTerminate();
