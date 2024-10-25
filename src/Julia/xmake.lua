@@ -5,6 +5,7 @@ target("Julia_CUDA")
     add_includedirs("$(env CUDA_PATH)/include")
 
     add_files("*.cu")
+    add_files("*.cpp")
 
     add_defines("USE_CUDA")
 
@@ -22,6 +23,7 @@ target("Julia_OpenMP")
     add_includedirs("$(env NUMPY_CORE)/include")
 
     add_files("*.cu")
+    add_files("*.cpp")
 
     -- OpenMP
     add_cuflags("-Xcompiler /openmp")

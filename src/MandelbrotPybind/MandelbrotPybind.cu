@@ -1,18 +1,14 @@
-﻿#include "Julia/Julia.h"
-#include "matplotlibcpp.h"
+﻿#include "MandelbrotPybind/MandelbrotPybind.h"
 #include <chrono>
 #include <iostream>
 #include <omp.h>
 #include <string>
-#include <vector>
 
 using std::cout;
 using std::endl;
 using std::string;
-using std::vector;
 
 using namespace std::chrono;
-namespace plt = matplotlibcpp;
 
 HOST_DEVICE inline unsigned short int
 mandelbrot(float real, float imag, unsigned short int maxIterations) {
@@ -123,18 +119,9 @@ void Mandelbrot::copyBack() {
 #endif
 }
 
-void Mandelbrot::save() {
-    vector<float> data(this->width_ * this->height_, 0.0f);
+std::vector<unsigned short int> Mandelbrot::getData() {
+    std::vector<unsigned short int> data(this->width_ * this->height_);
     for (int i = 0; i < this->width_ * this->height_; i++)
-        data[i] = (float)this->data_[i];
-
-    const float *zptr = &(data[0]);
-    const int colors = 1;
-    plt::figure_size(1920, 1080);
-    plt::imshow(zptr, this->height_, this->width_, colors);
-#ifdef USE_CUDA
-    plt::save("mandelbrot_CUDA.png");
-#else
-    plt::save("mandelbrot_OpenMP.png");
-#endif
+        data[i] = this->data_[i];
+    return data;
 }

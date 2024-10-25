@@ -9,8 +9,7 @@ set_languages("c17", "cxx17")
 
 set_kind("binary")
 set_runtimes("MD")
-set_targetdir("bin/$(mode)")
-set_suffixname("-$(plat)-$(arch)-$(mode)")
+set_targetdir("bin/$(plat)/$(arch)/$(mode)")
 
 -- 自动更新Visual Studio解决方案
 add_rules("plugin.vsxmake.autoupdate")
