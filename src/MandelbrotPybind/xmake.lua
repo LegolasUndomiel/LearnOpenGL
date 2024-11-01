@@ -43,7 +43,6 @@ target("MandelbrotPybind")
 
     add_includedirs("$(projectdir)/include/")
     add_includedirs("$(env CONDA_PATH)/include")
-    add_includedirs("$(env NUMPY_CORE)/include")
     add_includedirs("$(projectdir)/dependencies/pybind11/include")
 
     add_files("MandelbrotPybind.cpp")
