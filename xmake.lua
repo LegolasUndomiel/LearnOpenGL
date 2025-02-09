@@ -13,6 +13,8 @@ set_targetdir("bin/$(plat)/$(arch)/$(mode)")
 
 -- 自动更新Visual Studio解决方案
 add_rules("plugin.vsxmake.autoupdate")
+-- 自动更新compile_commands.json
+add_rules("plugin.compile_commands.autoupdate", {outputdir = ".vscode"})
 
 add_includedirs("include")
 
