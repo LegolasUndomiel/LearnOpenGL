@@ -1,6 +1,6 @@
 target("Mandelbrot")
     add_includedirs("$(projectdir)/dependencies/matplotlib-cpp")
-    add_includedirs("$(env CONDA_PATH)/include")
+    add_includedirs("$(env CONDA_INCLUDE)")
     add_includedirs("$(env NUMPY_CORE)/include")
     add_includedirs("$(env CUDA_PATH)/include")
 
@@ -15,5 +15,5 @@ target("Mandelbrot")
 
     -- Anaconda
     add_links("python3")
-    add_linkdirs("$(env CONDA_PATH)/libs")
+    add_linkdirs("$(env CONDA_LIBS)")
 target_end()

@@ -42,12 +42,12 @@ target("MandelbrotPybind")
     set_extension(".pyd")
 
     add_includedirs("$(projectdir)/include/")
-    add_includedirs("$(env CONDA_PATH)/include")
+    add_includedirs("$(env CONDA_INCLUDE)")
     add_includedirs("$(projectdir)/dependencies/pybind11/include")
 
     add_files("MandelbrotPybind.cpp")
     add_deps("MandelbrotStatic_CUDA")
 
     add_links("python3")
-    add_linkdirs("$(env CONDA_PATH)/libs")
+    add_linkdirs("$(env CONDA_LIBS)")
 target_end()
